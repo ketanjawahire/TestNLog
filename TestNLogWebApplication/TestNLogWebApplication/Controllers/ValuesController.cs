@@ -7,6 +7,13 @@ using Microsoft.Extensions.Logging;
 
 namespace TestNLogWebApplication.Controllers
 {
+    public enum LogEvents
+    {
+        EmailSent = 1,
+        SmsSent = 2,
+        EmailFailed = 3
+    }
+
     [Route("api/[controller]")]
     public class ValuesController : Controller
     {
@@ -21,7 +28,13 @@ namespace TestNLogWebApplication.Controllers
         [HttpGet]
         public IEnumerable<string> Get()
         {
-            _logger.LogInformation("Test information logged");
+
+            _logger.LogInformation(new EventId((int) LogEvents.EmailFailed, "EmailFailed"), "Logging {0}",
+                LogEvents.EmailFailed);
+            _logger.LogInformation(new EventId((int)LogEvents.EmailSent, "EmailSent"), "Logging {0}",
+                LogEvents.EmailSent);
+            _logger.LogInformation(new EventId((int)LogEvents.SmsSent, "SmsSent"), "Logging {0}",
+                LogEvents.SmsSent);
 
             return new string[] { "value1", "value2" };
         }
